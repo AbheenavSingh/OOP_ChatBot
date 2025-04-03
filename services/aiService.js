@@ -1,6 +1,7 @@
-import axios from 'axios';
-import { CONFIG } from '../config.js';
+import axios from "axios";
+import { CONFIG } from "../config.js";
 
+// System Prompt for AI
 const SYSTEM_PROMPT = `
 You are an AI chatbot that ONLY answers questions related to Object-Oriented Programming (OOP).
 If the user asks about:
@@ -15,19 +16,15 @@ Respond with: "I'm only trained to discuss Object-Oriented Programming (OOP) top
 
 export const getAIResponse = async (message) => {
     try {
-        const response = await axios.post(
-            `${CONFIG.GEMINI_API_URL}?key=${CONFIG.GEMINI_API_KEY}`,
-            {
-                contents: [{ role: 'user', parts: [{ text: `${SYSTEM_PROMPT}\nUser: ${message}\nAI:` }] }],
-            },
-            {
-                headers: { 'Content-Type': 'application/json' },
-            }
-        );
+        const response = await axios.post(CONFIG.GEMINI_API_URL, {
+            contents: [{ role: "user", parts: [{ text: SYSTEM_PROMPT + `\nUser: ${message}\nAI:` }] }]
+        }, {
+            headers: { "Content-Type": "application/json", "x-goog-api-key": CONFIG.GEMINI_API_KEY }
+        });
 
-        return response.data.candidates[0]?.content?.parts[0]?.text || "Sorry, I couldn't process your request.";
+        return response.data.candidates[0]?.content?.parts[0]?.text || "I'm sorry, I couldn't process that.";
     } catch (error) {
-        console.error('Error fetching AI response:', error);
-        return 'There was an error processing your request.';
+        console.error("🔴 AI Error:", error);
+        return "Sorry, I couldn't process your request at the moment.";
     }
 };

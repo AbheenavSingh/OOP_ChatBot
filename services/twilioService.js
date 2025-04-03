@@ -1,5 +1,5 @@
-import twilio from 'twilio';
-import { CONFIG } from '../config.js';
+import twilio from "twilio";
+import { CONFIG } from "../config.js";
 
 const client = twilio(CONFIG.TWILIO_ACCOUNT_SID, CONFIG.TWILIO_AUTH_TOKEN);
 
@@ -8,10 +8,10 @@ export const sendWhatsAppMessage = async (to, message) => {
         await client.messages.create({
             from: CONFIG.TWILIO_WHATSAPP_NUMBER,
             to: `whatsapp:${to}`,
-            body: message,
+            body: message
         });
-        console.log(`Message sent to ${to}`);
+        console.log(`📩 Sent message to ${to}`);
     } catch (error) {
-        console.error('Error sending WhatsApp message:', error);
+        console.error("🔴 Twilio Error:", error);
     }
 };
